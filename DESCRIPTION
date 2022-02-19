@@ -1,0 +1,30 @@
+Package: arize
+Type: Package
+Title: Arize Client
+Version: 0.1.0
+Author: Arize AI
+Maintainer: Michael Schiff <michael@arize.com>
+Description: Arize is an end-to-end ML observability and model monitoring platform. The platform is designed to help ML
+    engineers and data science practitioners surface and fix issues with ML models in production faster with:
+    * Automated ML monitoring and model monitoring
+    * Workflows to troubleshoot model performance
+    * Real-time visualizations for model performance monitoring, data quality monitoring, and drift monitoring
+    * Model prediction cohort analysis
+    * Pre-deployment model validation
+    * Integrated model explainability
+License: BSD
+Encoding: UTF-8
+Imports:
+    arrow,
+    checkmate,
+    glue,
+    httr,
+    lubridate,
+    magrittr,
+    R6,
+    RProtoBuf
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+RoxygenNote: 7.1.2
+Roxygen: list(markdown = TRUE)
