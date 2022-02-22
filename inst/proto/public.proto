@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package public;
+
+/*
+ * Schema represents the information necessary to map data in some format to our Record format
+ */
+message Schema {
+
+  /*
+   * Denotes the environment of the data being uploaded.
+   */
+  enum Environment {
+    UNKNOWN_ENVIRONMENT = 0;
+    TRAINING = 1;
+    VALIDATION = 2;
+    PRODUCTION = 3;
+  }
+
+  enum ModelType {
+    UNKNOWN_MODELTYPE = 0;
+    BINARY = 1;
+    NUMERIC = 2;
+    CATEGORICAL = 3;
+    SCORE_CATEGORICAL = 4;
+  }
+
+  /*
+   * Constants represent the high level metadata which is constant across rows within a tabular schema (and which will
+   * often not be repeated in each row of user data) and is only specified once
+   */
+  message Constants {
+    string model_id = 1;
+    string model_version = 2;
+    string batch_id = 3;
+    Environment environment = 4;
+    ModelType model_type = 5;
+  }
+
+
+  // ArizeConclusions schema is just a marker since we dont need any real additional info to make sense of canonical conclusion records
+  message ArizeConclusions{}
+  // ArizeExplanations schema is just a marker since we dont need any real additional info to make sense of canonical conclusion records
+  message ArizeExplanations{}
+
+  // ArrowSchema is used for ArrowIPC files. ArrowIPC files are columnar datastructures, and when output
+  // from pandas represent the same 2-dimensional structure as a DataFrame. Though ArrowIPC supports struct columns,
+  // pandas will not output an Arrow file that uses them, so we expect a flat schema
+  message ArrowSchema {
+    string prediction_id_column_name = 1;
+    repeated string feature_column_names = 2;
+    string timestamp_column_name = 3;
+    string prediction_label_column_name = 4;
+    string prediction_score_column_name = 5;
+    string actual_label_column_name = 6;
+    string actual_score_column_name = 7;
+    // key is the feature name, value is the name of the column that contains the shap values for this feature
+    map<string, string> shap_values_column_names = 8;
+  }
+
+  Constants constants = 1;
+  oneof schema {
+    ArizeConclusions arize_conclusions = 2;
+    ArizeExplanations arize_explanations = 3;
+    ArrowSchema arrow_schema = 4;
+    GenericSchema generic_schema = 5;
+  }
+
+  // GeneriSchema allows users to specify field descriptors within a generic and potentially nested data object (e.g. JSON object)
+  // to flexibly define a custom schema for their model data.
+  message GenericSchema {
+    FieldDescriptor prediction_id = 1;
+    GroupFieldDescriptor features = 2;
+    FieldDescriptor timestamp = 3;
+    FieldDescriptor prediction_label = 4;
+    FieldDescriptor prediction_score = 5;
+    FieldDescriptor actual_label = 6;
+    FieldDescriptor actual_score = 7;
+
+    // shap_values must match features names or else they will be discarded
+    GroupFieldDescriptor shap_values = 8;
+
+    // FieldDescriptor specifies the location of a field
+    message FieldDescriptor {
+      repeated string properties = 1;
+    }
+
+    // GroupFieldDescriptor allows fields to be dynamically identified using a capture group string
+    message GroupFieldDescriptor {
+      repeated string properties = 1;
+      // represents a capture group string used to extract a feature name from a data field name
+      // e.g. feature[0-9]* would extract "feature123" from "product1_feature123" or "feature123" from "feature123_randomhashsuffix"
+      string capture_group = 2;
+    }
+  }
+}

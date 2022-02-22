@@ -1,0 +1,5 @@
+.Rbuildignore
+.Renviron
+.Rproj.user
+client.Rproj
+.Rhistory
