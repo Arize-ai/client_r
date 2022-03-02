@@ -28,8 +28,8 @@ You can install the development version of arize from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("Arize-ai/arize")
+install.packages("devtools")
+devtools::install_github("Arize-ai/client_r")
 ```
 
 ## Example
@@ -116,22 +116,22 @@ schema <- create_schema(
 schema
 #> $prediction_id_column_name
 #> [1] "id"
-#> 
+#>
 #> $prediction_label_column_name
 #> [1] "predictions"
-#> 
+#>
 #> $prediction_score_column_name
 #> [1] "CTR_predicted"
-#> 
+#>
 #> $actual_label_column_name
 #> [1] "actuals"
-#> 
+#>
 #> $actual_score_column_name
 #> [1] "CTR"
-#> 
+#>
 #> $feature_column_names
 #> [1] "position" "domain"   "category" "device"   "keywords"
-#> 
+#>
 #> $timestamp_column_name
 #> [1] "model_date"
 ```
@@ -152,7 +152,7 @@ ORGANIZATION_KEY <- "your organization key"
 API_KEY <- "your api key"
 arize_client <- Client$new(organization_key = ORGANIZATION_KEY, api_key = API_KEY)
 ```
-
+--- or ---
 ``` r
 # Keys stored in `.Renviron`
 arize_client <- Client$new()
@@ -169,23 +169,23 @@ data objects.
 model_types
 #> $BINARY
 #> [1] 1
-#> 
+#>
 #> $NUMERIC
 #> [1] 2
-#> 
+#>
 #> $CATEGORICAL
 #> [1] 3
-#> 
+#>
 #> $SCORE_CATEGORICAL
 #> [1] 4
 
 environments
 #> $PRODUCTION
 #> [1] 1
-#> 
+#>
 #> $VALIDATION
 #> [1] 2
-#> 
+#>
 #> $TRAINING
 #> [1] 3
 ```

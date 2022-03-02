@@ -35,8 +35,8 @@ Arize is an end-to-end ML observability and model monitoring platform. The platf
 You can install the development version of arize from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("Arize-ai/arize")
+install.packages("devtools")
+devtools::install_github("Arize-ai/client_r")
 ```
 
 ## Example
@@ -44,21 +44,21 @@ devtools::install_github("Arize-ai/arize")
 In this example we are going to log modelling results for a click-through rate calculation.
 For background on the data and model, please refer to the original documentation (TODO: LINK).
 Here we download the training, validation, and production datasets to show how to use the
-`arize` package to log modelling results to Arize AI from `R`. 
+`arize` package to log modelling results to Arize AI from `R`.
 
 Logging to Arize AI in three steps:
 
-1. Perform your analysis and store results you wish to start logging 
+1. Perform your analysis and store results you wish to start logging
 (in this example we start with already prepared datasets)
-2. Create a logging schema. This is a named list of parameters that describes the 
+2. Create a logging schema. This is a named list of parameters that describes the
 dataset you are logging
 3. Initiate an `arize_logger` instance to send data to the Arize AI API
 (validation of the dataset and schema is carried out internally)
 
- 
+
 ### Step 1: Model results
 
-For this vignette, we download datasets with model results to log. In your usage, 
+For this vignette, we download datasets with model results to log. In your usage,
 this step would be replaced with your modelling procedures.
 
 ```{r}
@@ -71,9 +71,9 @@ datasets <- lapply(dataset_names,
 datasets <- setNames(datasets, dataset_names)
 ```
 
-For clarity, we can separate the `datasets` objects into three data frames, for 
-training, validation, and production. We also make sure the results timestamp is an 
-vector of class `Date` as required by the Arize AI API. 
+For clarity, we can separate the `datasets` objects into three data frames, for
+training, validation, and production. We also make sure the results timestamp is an
+vector of class `Date` as required by the Arize AI API.
 
 ```{r}
 # This is the data which we will be logging
@@ -88,10 +88,10 @@ df_prod$model_date <- as.Date(df_prod$model_date)
 ### Step 2: Schema
 
 The `schema` is a simple named list describing the data you wish to log. The possible fields
-in the schema can be seen by looking up the `schema_fields` data object exported by the 
-`arize` package. To create a schema we'll use the `arize::create_schema` function. We first 
-declare our model id, model version, and create a vector of the features. Thereafter, we 
-pass these as arguments to `create_schema`. 
+in the schema can be seen by looking up the `schema_fields` data object exported by the
+`arize` package. To create a schema we'll use the `arize::create_schema` function. We first
+declare our model id, model version, and create a vector of the features. Thereafter, we
+pass these as arguments to `create_schema`.
 
 ```{r}
 model_id <- "click_through_rate_categorical_vignette"  # This is the model name that will show up in Arize
@@ -122,7 +122,7 @@ schema
 
 ### Step 3: Log to Arize AI
 
-We begin by starting a new instance of the `arize`'s logger (see `?arize::Client`). For this, we need our 
+We begin by starting a new instance of the `arize`'s logger (see `?arize::Client`). For this, we need our
 authentication credentials that we can look up from the `Space settings` on our Arize AI dashboard. We can
 pass these keys to the logger directly in our script, or store them as environmental variables in an
 `.Renviron` file. In the latter case, the we can initiate a new `arize::Client` instance without supplying
@@ -134,7 +134,7 @@ ORGANIZATION_KEY <- "your organization key"
 API_KEY <- "your api key"
 arize_client <- Client$new(organization_key = ORGANIZATION_KEY, api_key = API_KEY)
 ```
-
+--- or ---
 ```{r}
 # Keys stored in `.Renviron`
 arize_client <- Client$new()
